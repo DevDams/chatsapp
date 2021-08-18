@@ -2,12 +2,55 @@
   <div>
     <div class="join flex justify-center">
       <div class="bg fixed top-0 left-0 w-full h-full"></div>
-      <div class="relative join_box flex flex-col items-center border border-gray-200 w-96 rounded-xl shadow-lg z-30">
+      <div
+        class="
+          relative
+          join_box
+          flex flex-col
+          items-center
+          border border-gray-200
+          w-96
+          rounded-xl
+          shadow-lg
+          z-30
+        "
+      >
         <div class="pic flex flex-col items-center">
-          <div class="profil_pic w-24 h-24 bg-white rounded-full shadow-md cursor-pointer border border-gray-200">
-            <img src="~assets/svg/user.svg" alt="user icon" @click="choosePic" class="default_picture" :class="changed ? 'hidden' : 'inline-block'">
-            <img src="~assets/svg/user.svg" alt="user icon" id="profil_picture" @click="choosePic" class="choose_picture" :class="!changed ? 'hidden' : 'inline-block'">
-            <input @change="processFile($event)" type="file" name="picture" id="picture" accept="image/png, image/jpg, image/jpeg" hidden>
+          <div
+            class="
+              profil_pic
+              w-24
+              h-24
+              bg-white
+              rounded-full
+              shadow-md
+              cursor-pointer
+              border border-gray-200
+            "
+          >
+            <img
+              src="~assets/svg/user.svg"
+              alt="user icon"
+              @click="choosePic"
+              class="default_picture"
+              :class="changed ? 'hidden' : 'inline-block'"
+            />
+            <img
+              src="~assets/svg/user.svg"
+              alt="user icon"
+              id="profil_picture"
+              @click="choosePic"
+              class="choose_picture"
+              :class="!changed ? 'hidden' : 'inline-block'"
+            />
+            <input
+              @change="processFile($event)"
+              type="file"
+              name="picture"
+              id="picture"
+              accept="image/png, image/jpg, image/jpeg"
+              hidden
+            />
           </div>
           <p class="text-xl font-semibold">Choisir une photo de profil</p>
         </div>
@@ -17,18 +60,68 @@
               <label for="username" class="text-lg font-medium">
                 Nom d'utilisateur
               </label>
-              <input type="text" name="username" id="username" class="w-full h-12 rounded-lg font-medium border border-gray-200">
+              <input
+                v-model="username"
+                type="text"
+                name="username"
+                id="username"
+                class="
+                  w-full
+                  h-12
+                  rounded-lg
+                  font-medium
+                  border border-gray-200
+                "
+              />
             </div>
             <div class="room">
               <label for="room" class="text-lg font-medium">
                 Nom du salon
               </label>
-              <input type="text" name="room" id="room" class="w-full h-12 rounded-lg font-medium border border-gray-200">
+              <input
+                v-model="room"
+                type="text"
+                name="room"
+                id="room"
+                class="
+                  w-full
+                  h-12
+                  rounded-lg
+                  font-medium
+                  border border-gray-200
+                "
+              />
             </div>
             <div class="join_btn text-center">
-              <button type="submit" class="bg-dark font-semibold text-white rounded-xl">Rejoindre</button>
+              <button
+                type="submit"
+                class="bg-dark font-semibold text-white rounded-xl"
+                @click="joinRoom"
+              >
+                Rejoindre
+              </button>
             </div>
           </form>
+        </div>
+        <div
+          class="
+            absolute
+            top-0
+            join_box
+            bg-white
+            flex
+            items-center
+            justify-center
+            border border-gray-200
+            w-96
+            h-full
+            rounded-xl
+            shadow-lg
+            z-40
+          "
+          :class="load ? 'block' : 'hidden'"
+        >
+          <img src="~assets/svg/oval.svg" alt="spinner loader" />
         </div>
       </div>
     </div>
@@ -40,26 +133,44 @@ export default {
   data() {
     return {
       picture: '',
-      changed: false
+      username: '',
+      room: '',
+      changed: false,
+      load: false,
     }
   },
   methods: {
-    choosePic () {
+    choosePic() {
       const picInput = document.querySelector('#picture')
       picInput.click()
     },
-    processFile (event) {
+    processFile(event) {
       this.changed = true
       this.picture = event.target.files[0]
-      if (this.picture !== '') {
+      if (event.target.files.length !== 0) {
         const picturePath = URL.createObjectURL(this.picture)
         const picture = document.querySelector('#profil_picture')
         picture.src = picturePath
+        console.log(picture)
       } else {
-        return ''
+        const picture = document.querySelector('#profil_picture')
+        picture.src = ''
       }
-    }
-  }
+    },
+    joinRoom(e) {
+      e.preventDefault()
+      this.load = true
+      if (this.username !== '' && this.room !== '') {
+        setTimeout(() => {
+          this.$router.push('/room')
+        }, 1500)
+      } else {
+        setTimeout(() => {
+          this.load = false
+        }, 1500)
+      }
+    },
+  },
 }
 </script>
 
