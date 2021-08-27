@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="room h-screen">
+    <div class="room h-screen relative">
       <div class="room_chat w-full">
         <div class="header w-full h-16 px-6 flex items-center justify-between shadow-md">
           <p class="text-xl font-semibold">Room title</p>
@@ -23,6 +23,10 @@
         </div>
       </div>
       <div class="types_box">
+        <div class="absolute bottom-20" :class="emoji_pick ? 'block' : 'hidden'">
+          <picker @select="addEmoji" />
+        </div>
+        <button @click="emoji">emoji</button>
         <input type="text" name="text" id="text" class="border">
         <button class="bg-black px-3 py-1 text-white">envoyer</button>
       </div>
@@ -31,7 +35,26 @@
 </template>
 
 <script>
-export default {}
+import { Picker } from 'emoji-mart-vue'
+export default {
+  components: {
+    Picker
+  },
+  data() {
+    return {
+      emoji_pick: false
+    }
+  },
+  methods: {
+    emoji () {
+      this.emoji_pick = !this.emoji_pick
+    },
+    addEmoji (e) {
+      const field = document.querySelector('#text')
+      field.value = field.value + e.native
+    }
+  }
+}
 </script>
 
 <style scoped>
